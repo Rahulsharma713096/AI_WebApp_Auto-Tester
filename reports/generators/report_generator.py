@@ -1,5 +1,4 @@
 import json
-from typing import Any
 
 
 class JSONReportGenerator:
@@ -13,10 +12,11 @@ class JSONReportGenerator:
 
 class PDFReportGenerator:
     def generate(self, data: dict) -> bytes:
-        from reportlab.lib.pagesizes import letter
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table
-        from reportlab.lib.styles import getSampleStyleSheet
         from io import BytesIO
+
+        from reportlab.lib.pagesizes import letter
+        from reportlab.lib.styles import getSampleStyleSheet
+        from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter)
@@ -49,8 +49,6 @@ class PDFReportGenerator:
 class DOCXReportGenerator:
     def generate(self, data: dict):
         from docx import Document
-        from docx.shared import Inches, Pt
-        from docx.enum.text import WD_ALIGN_PARAGRAPH
 
         doc = Document()
         doc.add_heading(f"Test Report: {data.get('url', 'N/A')}", 0)

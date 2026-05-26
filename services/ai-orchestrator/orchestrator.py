@@ -1,14 +1,16 @@
-import json
 import os
-from typing import Optional
-from .llm.provider import get_llm_provider, LLMProvider
-from .agents.planner import (
-    TestPlannerAgent,
-    FunctionalFlowAgent,
-    VisualQAAgent,
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+
+from agents.planner import (
     AccessibilityAgent,
+    FunctionalFlowAgent,
     SecurityProbeAgent,
+    TestPlannerAgent,
+    VisualQAAgent,
 )
+from llm.provider import LLMProvider, get_llm_provider
 
 
 class AIOrchestrator:

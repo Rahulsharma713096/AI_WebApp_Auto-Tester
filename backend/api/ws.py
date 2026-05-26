@@ -1,9 +1,6 @@
 import json
-import asyncio
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from sqlalchemy import select
-from backend.database import async_session, get_db
-from backend.models.test_run import TestRun, TestCase, Issue
 
 router = APIRouter()
 
@@ -32,7 +29,9 @@ class ConnectionManager:
                 except Exception:
                     pass
 
-    async def broadcast_progress(self, test_run_id: str, progress: int, status: str, message: str = ""):
+    async def broadcast_progress(
+        self, test_run_id: str, progress: int, status: str, message: str = ""
+    ):
         await self.send_log(test_run_id, {
             "type": "progress",
             "progress": progress,

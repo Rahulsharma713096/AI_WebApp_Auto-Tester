@@ -1,10 +1,12 @@
 import asyncio
 import time
 from datetime import datetime
+
 from sqlalchemy import select
-from backend.database import async_session
-from backend.models.test_run import TestRun, TestCase, Issue, Page
+
 from backend.api.ws import manager
+from backend.database import async_session
+from backend.models.test_run import Issue, Page, TestCase, TestRun
 
 
 async def execute_test_run(test_run_id: str):
@@ -14,6 +16,7 @@ async def execute_test_run(test_run_id: str):
         if not test_run:
             return
 
+        target_url = test_run.url
         test_run.status = "running"
         test_run.summary = {"total_checks": 0, "passed": 0, "failed": 0, "warnings": 0}
         await db.commit()
@@ -22,9 +25,7 @@ async def execute_test_run(test_run_id: str):
 
     try:
         start_time = time.time()
-        pages_to_check = [test_run.url]
-        all_issues = []
-        all_test_cases = []
+        pages_to_check = [target_url]
 
         for idx, page_url in enumerate(pages_to_check):
             progress = int((idx / len(pages_to_check)) * 60)
@@ -42,7 +43,6 @@ async def execute_test_run(test_run_id: str):
                 )
                 db.add(page)
                 await db.commit()
-                await db.refresh(page)
 
             await asyncio.sleep(1)
 
@@ -78,18 +78,21 @@ async def execute_test_run(test_run_id: str):
 
             elapsed = time.time() - start_time
 
-            test_run.status = "completed"
-            test_run.score = score
-            test_run.duration = elapsed
-            test_run.completed_at = datetime.utcnow()
-            test_run.summary = {
-                "total_checks": total,
-                "passed": passed,
-                "failed": failed,
-                "warnings": warnings,
-                "total_issues": len(all_issues),
-            }
-            await db.commit()
+            q = select(TestRun).where(TestRun.id == test_run_id)
+            test_run = (await db.execute(q)).scalar_one_or_none()
+            if test_run:
+                test_run.status = "completed"
+                test_run.score = score
+                test_run.duration = elapsed
+                test_run.completed_at = datetime.utcnow()
+                test_run.summary = {
+                    "total_checks": total,
+                    "passed": passed,
+                    "failed": failed,
+                    "warnings": warnings,
+                    "total_issues": len(all_issues),
+                }
+                await db.commit()
 
         await manager.broadcast_progress(
             test_run_id, 100, "completed",

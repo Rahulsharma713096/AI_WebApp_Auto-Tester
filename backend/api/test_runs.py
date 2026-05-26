@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select, func
-from sqlalchemy.ext.asyncio import AsyncSession
-from datetime import datetime
 import uuid
+from datetime import datetime
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from backend.database import get_db
-from backend.models.test_run import TestRun, Page, Issue, TestCase
+from backend.models.test_run import Issue, Page, TestCase, TestRun
 
 router = APIRouter(prefix="/api/test-runs", tags=["test-runs"])
 

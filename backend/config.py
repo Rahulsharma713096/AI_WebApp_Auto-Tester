@@ -1,7 +1,9 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
     database_url: str = "sqlite+aiosqlite:///./data/tester.db"
     redis_url: str = "redis://localhost:6379/0"
     celery_broker_url: str = "redis://localhost:6379/0"
@@ -15,9 +17,6 @@ class Settings(BaseSettings):
     report_dir: str = "./reports/output"
     screenshot_dir: str = "./runtime/screenshots"
     log_level: str = "INFO"
-
-    class Config:
-        env_file = ".env"
 
 
 settings = Settings()

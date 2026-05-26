@@ -1,6 +1,10 @@
 import json
-from typing import Optional
-from ..llm.provider import LLMProvider
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+
+from llm.provider import LLMProvider
 
 
 class TestPlannerAgent:
