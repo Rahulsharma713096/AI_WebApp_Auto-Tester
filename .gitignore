@@ -1,0 +1,17 @@
+node_modules/
+.next/
+__pycache__/
+*.pyc
+*.pyo
+.env
+data/*.db
+runtime/screenshots/*
+reports/output/*
+!reports/output/.gitkeep
+!runtime/screenshots/.gitkeep
+*.egg-info/
+dist/
+build/
+.vscode/
+.idea/
+*.log

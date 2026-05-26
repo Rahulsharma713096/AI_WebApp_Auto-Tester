@@ -1,0 +1,26 @@
+{
+  "name": "ai-webapp-auto-tester",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm:dev:frontend\" \"npm:dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm run build",
+    "start:backend": "cd backend && uvicorn main:app --host 0.0.0.0 --port 8000",
+    "start:frontend": "cd frontend && npm start",
+    "test": "concurrently \"npm:test:frontend\" \"npm:test:backend\"",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && pytest",
+    "lint": "concurrently \"npm:lint:frontend\" \"npm:lint:backend\"",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && ruff check .",
+    "format": "concurrently \"npm:format:frontend\" \"npm:format:backend\"",
+    "format:frontend": "cd frontend && npm run format",
+    "format:backend": "cd backend && ruff format ."
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
